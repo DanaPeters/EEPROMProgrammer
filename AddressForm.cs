@@ -25,9 +25,15 @@ namespace EEPROMProgrammer
             InitializeComponent();
             startAddressNumericUpDown.Value = startAddress;
             startAddressNumericUpDown.Maximum = 0x10000 - _length;
+            UpdateEndAddress();
         }
 
         private void startAddressNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateEndAddress();
+        }
+
+        private void UpdateEndAddress()
         {
             endAddressLabel.Text = $"{StartAddress + _length - 1:X4}";
         }

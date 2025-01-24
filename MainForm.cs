@@ -65,7 +65,7 @@ namespace EEPROMProgrammer
         public MainForm()
         {
             InitializeComponent();
-            //versionToolStripStatusLabel.Text = $"Version {Application.ProductVersion}";
+            versionToolStripStatusLabel.Text = $"Version {Application.ProductVersion}";
             LoadSettings();
         }
 
@@ -526,13 +526,16 @@ namespace EEPROMProgrammer
                 MessageBox.Show(text, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            var messageBoxIcon = MessageBoxIcon.Information;
             if (lowAddress < _eepromStartAddress || highAddress > _eepromStartAddress + _eepromSize - 1)
             {
-                text += "Warning: file data will not be completely written to EEPROM\r\rContinue?";
-                var dialogResult = MessageBox.Show(text, this.Text, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
-                if (dialogResult == DialogResult.Cancel)
-                    return;
+                text += "Warning: file data will not be completely written to EEPROM\r\r";
+                messageBoxIcon = MessageBoxIcon.Warning;
             }
+            text += "Continue?";
+            var dialogResult = MessageBox.Show(text, this.Text, MessageBoxButtons.OKCancel, messageBoxIcon, MessageBoxDefaultButton.Button1);
+            if (dialogResult == DialogResult.Cancel)
+                return;
             _writeData = new byte[_eepromSize];
             LoadData(memorySegments, _eepromStartAddress, _writeData);
             SetState(StateEnum.Writing);
